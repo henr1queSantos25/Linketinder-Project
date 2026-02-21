@@ -27,7 +27,7 @@ Para compilar e executar este projeto localmente, é necessário possuir os segu
 
 ## Como Executar
 1. Clone o repositório para o seu ambiente local utilizando o comando:
-   `git clone <LINK_DO_SEU_REPOSITORIO_AQUI>`
+   `git clone <https://github.com/henr1queSantos25/Linketinder-Project>`
 2. Abra o diretório raiz do projeto na sua IDE (recomenda-se o IntelliJ IDEA).
 3. Aguarde a indexação e certifique-se de que o SDK do Groovy está devidamente mapeado nas configurações do projeto (`File > Project Structure > Global Libraries`).
 4. Navegue até o diretório `src/`.
