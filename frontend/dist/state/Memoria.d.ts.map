@@ -1,0 +1,1 @@
+{"version":3,"file":"Memoria.d.ts","sourceRoot":"","sources":["../../src/state/Memoria.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,UAAU,EAAE,MAAM,wBAAwB,CAAC;AACzD,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,sBAAsB,CAAC;AAErD,qBAAa,OAAO;IAChB,MAAM,CAAC,UAAU,EAAE,UAAU,EAAE,CAAM;IACrC,MAAM,CAAC,QAAQ,EAAE,QAAQ,EAAE,CAAM;CACpC"}
