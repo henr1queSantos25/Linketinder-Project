@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linketinder MVP</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
+        header { background-color: #0073b1; color: white; padding: 1rem; text-align: center; }
+        nav { display: flex; justify-content: center; background-color: #333; }
+        nav button { background: none; color: white; border: none; padding: 1rem; cursor: pointer; font-size: 1rem; }
+        nav button:hover { background-color: #555; }
+        main { padding: 2rem; max-width: 800px; margin: 0 auto; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Linketinder</h1>
+        <p>Conectando talentos a grandes oportunidades</p>
+    </header>
+
+    <nav>
+        <button onclick="navegar('tela-cadastro-candidato')">Cadastro Candidato</button>
+        <button onclick="navegar('tela-cadastro-empresa')">Cadastro Empresa</button>
+        <button onclick="navegar('tela-lista-vagas')">Vagas (Visão Candidato)</button>
+        <button onclick="navegar('tela-lista-candidatos')">Candidatos (Visão Empresa)</button>
+    </nav>
+
+    <main id="app">
+        <h2>Bem-vindo ao Linketinder!</h2>
+        <p>Selecione uma opção no menu acima para começar.</p>
+    </main>
+
+    <script type="module" src="dist/index.js" defer></script>
+</body>
+</html>
