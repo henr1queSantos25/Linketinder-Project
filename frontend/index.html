@@ -13,6 +13,7 @@
         main { padding: 2rem; max-width: 800px; margin: 0 auto; }
         .hidden { display: none; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -80,6 +81,11 @@
 
         <section id="tela-lista-candidatos" class="hidden">
             <h2>Candidatos Cadastrados (Visão da Empresa)</h2>
+            
+            <div style="width: 100%; max-width: 600px; margin: 20px auto;">
+                <canvas id="grafico-competencias"></canvas>
+            </div>
+
             <table id="tabela-candidatos" border="1" width="100%" style="border-collapse: collapse; text-align: left;">
                 <thead>
                     <tr style="background-color: #ddd;">
