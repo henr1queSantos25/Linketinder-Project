@@ -2,7 +2,8 @@ import { Memoria } from "./state/Memoria.js";
 import type { ICandidato } from "./models/Candidato.js";
 import type { IEmpresa } from "./models/Empresa.js";
 
-// --- Lógica de Navegação ---
+// --- Navegação entre telas ---
+
 function navegar(idTela: string): void {
     const secoes = document.querySelectorAll("main section");
     secoes.forEach(secao => secao.classList.add("hidden"));
@@ -11,11 +12,18 @@ function navegar(idTela: string): void {
     if (telaAlvo) {
         telaAlvo.classList.remove("hidden");
     }
+
+    if (idTela === "tela-lista-vagas") {
+        renderizarVagas();
+    } else if (idTela === "tela-lista-candidatos") {
+        renderizarCandidatos();
+    }
 }
 
 (window as any).navegar = navegar;
 
-// --- Lógica de Cadastro ---
+// --- CREATE ---
+
 document.addEventListener("DOMContentLoaded", () => {
     
     const formCandidato = document.getElementById("form-candidato") as HTMLFormElement;
@@ -70,3 +78,63 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// --- READ ---
+
+function renderizarVagas(): void {
+    const tbody = document.querySelector("#tabela-vagas tbody");
+    if (!tbody) return;
+    tbody.innerHTML = ""; 
+
+    Memoria.empresas.forEach((empresa, index) => {
+        const tr = document.createElement("tr");
+        
+        tr.title = `País: ${empresa.pais} | Estado: ${empresa.estado} | Descrição: ${empresa.descricao}`;
+        
+        tr.innerHTML = `
+            <td style="padding: 8px;">Empresa Anônima ${index + 1}</td>
+            <td style="padding: 8px;">${empresa.competencias.join(", ")}</td>
+            <td style="padding: 8px;">
+                <button onclick="deletarEmpresa(${index})">Eliminar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function renderizarCandidatos(): void {
+    const tbody = document.querySelector("#tabela-candidatos tbody");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    Memoria.candidatos.forEach((candidato, index) => {
+        const tr = document.createElement("tr");
+        
+        tr.title = `Idade: ${candidato.idade} | Estado: ${candidato.estado} | Descrição: ${candidato.descricao}`;
+        
+        tr.innerHTML = `
+            <td style="padding: 8px;">Candidato Anônimo ${index + 1}</td>
+            <td style="padding: 8px;">${candidato.competencias.join(", ")}</td>
+            <td style="padding: 8px;">
+                <button onclick="deletarCandidato(${index})">Eliminar</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// --- DELETE ---
+
+(window as any).deletarEmpresa = (index: number) => {
+    if (confirm("Tem a certeza que deseja eliminar esta vaga do sistema?")) {
+        Memoria.empresas.splice(index, 1);
+        renderizarVagas(); 
+    }
+};
+
+(window as any).deletarCandidato = (index: number) => {
+    if (confirm("Tem a certeza que deseja eliminar este candidato do sistema?")) {
+        Memoria.candidatos.splice(index, 1);
+        renderizarCandidatos();
+    }
+};
