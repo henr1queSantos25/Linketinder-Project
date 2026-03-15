@@ -1,0 +1,10 @@
+@media (max-width: 480px) {
+    main {
+        padding: 1rem;
+    }
+
+    nav button {
+        min-width: 100px;
+        padding: 0.6rem 0.5rem;
+    }
+}

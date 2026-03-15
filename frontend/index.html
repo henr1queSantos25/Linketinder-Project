@@ -4,15 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linketinder MVP</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
-        header { background-color: #0073b1; color: white; padding: 1rem; text-align: center; }
-        nav { display: flex; justify-content: center; background-color: #333; }
-        nav button { background: none; color: white; border: none; padding: 1rem; cursor: pointer; font-size: 1rem; }
-        nav button:hover { background-color: #555; }
-        main { padding: 2rem; max-width: 800px; margin: 0 auto; }
-        .hidden { display: none; }
-    </style>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/responsive.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -38,14 +31,14 @@
         <section id="tela-cadastro-candidato" class="hidden">
             <h2>Cadastro de Candidato</h2>
             <form id="form-candidato">
-                <input type="text" id="cand-nome" placeholder="Nome" required><br><br>
-                <input type="email" id="cand-email" placeholder="E-mail" required><br><br>
-                <input type="text" id="cand-cpf" placeholder="CPF" required><br><br>
-                <input type="number" id="cand-idade" placeholder="Idade" required><br><br>
-                <input type="text" id="cand-estado" placeholder="Estado" required><br><br>
-                <input type="text" id="cand-cep" placeholder="CEP" required><br><br>
-                <textarea id="cand-descricao" placeholder="Descrição Pessoal" required></textarea><br><br>
-                <input type="text" id="cand-competencias" placeholder="Competências (separe por vírgula)" required><br><br>
+                <input type="text" id="cand-nome" placeholder="Nome" required>
+                <input type="email" id="cand-email" placeholder="E-mail" required>
+                <input type="text" id="cand-cpf" placeholder="CPF" required>
+                <input type="number" id="cand-idade" placeholder="Idade" required>
+                <input type="text" id="cand-estado" placeholder="Estado" required>
+                <input type="text" id="cand-cep" placeholder="CEP" required>
+                <textarea id="cand-descricao" placeholder="Descrição Pessoal" required></textarea>
+                <input type="text" id="cand-competencias" placeholder="Competências (separe por vírgula)" required>
                 <button type="submit">Salvar Candidato</button>
             </form>
         </section>
@@ -53,49 +46,53 @@
         <section id="tela-cadastro-empresa" class="hidden">
             <h2>Cadastro de Empresa</h2>
             <form id="form-empresa">
-                <input type="text" id="emp-nome" placeholder="Nome da Empresa" required><br><br>
-                <input type="email" id="emp-email" placeholder="E-mail Corporativo" required><br><br>
-                <input type="text" id="emp-cnpj" placeholder="CNPJ" required><br><br>
-                <input type="text" id="emp-pais" placeholder="País" required><br><br>
-                <input type="text" id="emp-estado" placeholder="Estado" required><br><br>
-                <input type="text" id="emp-cep" placeholder="CEP" required><br><br>
-                <textarea id="emp-descricao" placeholder="Descrição da Empresa" required></textarea><br><br>
-                <input type="text" id="emp-competencias" placeholder="Competências desejadas (separe por vírgula)" required><br><br>
+                <input type="text" id="emp-nome" placeholder="Nome da Empresa" required>
+                <input type="email" id="emp-email" placeholder="E-mail Corporativo" required>
+                <input type="text" id="emp-cnpj" placeholder="CNPJ" required>
+                <input type="text" id="emp-pais" placeholder="País" required>
+                <input type="text" id="emp-estado" placeholder="Estado" required>
+                <input type="text" id="emp-cep" placeholder="CEP" required>
+                <textarea id="emp-descricao" placeholder="Descrição da Empresa" required></textarea>
+                <input type="text" id="emp-competencias" placeholder="Competências desejadas (separe por vírgula)" required>
                 <button type="submit">Salvar Empresa</button>
             </form>
         </section>
 
         <section id="tela-lista-vagas" class="hidden">
             <h2>Vagas Disponíveis (Visão do Candidato)</h2>
-            <table id="tabela-vagas" border="1" width="100%" style="border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background-color: #ddd;">
-                        <th style="padding: 8px;">Empresa</th>
-                        <th style="padding: 8px;">Competências Desejadas</th>
-                        <th style="padding: 8px;">Ações</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="tabela-wrapper">
+                <table id="tabela-vagas">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Competências Desejadas</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </section>
 
         <section id="tela-lista-candidatos" class="hidden">
             <h2>Candidatos Cadastrados (Visão da Empresa)</h2>
-            
-            <div style="width: 100%; max-width: 600px; margin: 20px auto;">
+
+            <div class="grafico-wrapper">
                 <canvas id="grafico-competencias"></canvas>
             </div>
 
-            <table id="tabela-candidatos" border="1" width="100%" style="border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background-color: #ddd;">
-                        <th style="padding: 8px;">Candidato</th>
-                        <th style="padding: 8px;">Competências</th>
-                        <th style="padding: 8px;">Ações</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="tabela-wrapper">
+                <table id="tabela-candidatos">
+                    <thead>
+                        <tr>
+                            <th>Candidato</th>
+                            <th>Competências</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </section>
     </main>
 
