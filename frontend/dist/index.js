@@ -1,4 +1,5 @@
 import { Memoria } from "./state/Memoria.js";
+import { Validadores } from "./utils/Validadores.js";
 // --- NAVEGAÇÃO ENTRE TELAS ---
 function navegar(idTela) {
     const secoes = document.querySelectorAll("main section");
@@ -22,32 +23,41 @@ document.addEventListener("DOMContentLoaded", () => {
     if (formCandidato) {
         formCandidato.addEventListener("submit", (event) => {
             event.preventDefault();
-            const cpfInput = document.getElementById("cand-cpf").value.trim();
+            const nomeInput = document.getElementById("cand-nome").value.trim();
             const emailInput = document.getElementById("cand-email").value.trim();
-            const idadeInput = parseInt(document.getElementById("cand-idade").value);
-            if (idadeInput <= 0) {
-                alert("Erro: A idade deve ser maior que zero.");
-                return;
-            }
-            if (Memoria.candidatos.some(c => c.cpf === cpfInput)) {
-                alert("Erro: Já existe um candidato cadastrado com este CPF.");
-                return;
-            }
-            if (Memoria.candidatos.some(c => c.email === emailInput)) {
-                alert("Erro: Já existe um candidato cadastrado com este e-mail.");
-                return;
-            }
+            const cpfInput = document.getElementById("cand-cpf").value.trim();
+            const telefoneInput = document.getElementById("cand-telefone").value.trim();
+            const linkedinInput = document.getElementById("cand-linkedin").value.trim();
+            const cepInput = document.getElementById("cand-cep").value.trim();
             const compStr = document.getElementById("cand-competencias").value;
-            const competenciasArray = Array.from(new Set(compStr.split(",")
-                .map(c => c.trim().toUpperCase())
-                .filter(c => c !== "")));
+            const idadeInput = parseInt(document.getElementById("cand-idade").value);
+            // Validações Regex 
+            if (!Validadores.validarNome(nomeInput))
+                return alert("Erro: O nome deve conter apenas letras e espaços.");
+            if (!Validadores.validarEmail(emailInput))
+                return alert("Erro: Formato de e-mail inválido.");
+            if (!Validadores.validarCPF(cpfInput))
+                return alert("Erro: CPF inválido. Use o formato 111.222.333-44.");
+            if (!Validadores.validarTelefone(telefoneInput))
+                return alert("Erro: Telefone inválido. Use o formato (11) 98888-7777.");
+            if (!Validadores.validarLinkedin(linkedinInput))
+                return alert("Erro: Link do LinkedIn inválido.");
+            if (!Validadores.validarCEP(cepInput))
+                return alert("Erro: CEP inválido. Use o formato 12345-678.");
+            if (!Validadores.validarTags(compStr))
+                return alert("Erro: As competências devem ser separadas por vírgula e não conter caracteres especiais.");
+            if (idadeInput <= 0)
+                return alert("Erro: A idade deve ser maior que zero.");
+            if (Memoria.candidatos.some(c => c.cpf === cpfInput))
+                return alert("Erro: Já existe um candidato cadastrado com este CPF.");
+            if (Memoria.candidatos.some(c => c.email === emailInput))
+                return alert("Erro: Já existe um candidato cadastrado com este e-mail.");
+            const competenciasArray = Array.from(new Set(compStr.split(",").map(c => c.trim().toUpperCase()).filter(c => c !== "")));
             const novoCandidato = {
-                nome: document.getElementById("cand-nome").value.trim(),
-                email: emailInput,
-                cpf: cpfInput,
-                idade: idadeInput,
+                nome: nomeInput, email: emailInput, cpf: cpfInput,
+                telefone: telefoneInput, linkedin: linkedinInput, idade: idadeInput,
                 estado: document.getElementById("cand-estado").value.trim(),
-                cep: document.getElementById("cand-cep").value.trim(),
+                cep: cepInput,
                 descricao: document.getElementById("cand-descricao").value.trim(),
                 competencias: competenciasArray
             };
@@ -60,27 +70,32 @@ document.addEventListener("DOMContentLoaded", () => {
     if (formEmpresa) {
         formEmpresa.addEventListener("submit", (event) => {
             event.preventDefault();
-            const cnpjInput = document.getElementById("emp-cnpj").value.trim();
+            const nomeInput = document.getElementById("emp-nome").value.trim();
             const emailInput = document.getElementById("emp-email").value.trim();
-            if (Memoria.empresas.some(e => e.cnpj === cnpjInput)) {
-                alert("Erro: Já existe uma empresa cadastrada com este CNPJ.");
-                return;
-            }
-            if (Memoria.empresas.some(e => e.email === emailInput)) {
-                alert("Erro: Já existe uma empresa cadastrada com este e-mail.");
-                return;
-            }
+            const cnpjInput = document.getElementById("emp-cnpj").value.trim();
+            const cepInput = document.getElementById("emp-cep").value.trim();
             const compStr = document.getElementById("emp-competencias").value;
-            const competenciasArray = Array.from(new Set(compStr.split(",")
-                .map(c => c.trim().toUpperCase())
-                .filter(c => c !== "")));
+            // Validações Regex
+            if (!Validadores.validarNome(nomeInput))
+                return alert("Erro: O nome da empresa deve conter apenas letras e espaços.");
+            if (!Validadores.validarEmail(emailInput))
+                return alert("Erro: Formato de e-mail corporativo inválido.");
+            if (!Validadores.validarCNPJ(cnpjInput))
+                return alert("Erro: CNPJ inválido. Use o formato 11.222.333/0001-44.");
+            if (!Validadores.validarCEP(cepInput))
+                return alert("Erro: CEP inválido. Use o formato 12345-678.");
+            if (!Validadores.validarTags(compStr))
+                return alert("Erro: As competências desejadas estão num formato inválido.");
+            if (Memoria.empresas.some(e => e.cnpj === cnpjInput))
+                return alert("Erro: Já existe uma empresa cadastrada com este CNPJ.");
+            if (Memoria.empresas.some(e => e.email === emailInput))
+                return alert("Erro: Já existe uma empresa cadastrada com este e-mail.");
+            const competenciasArray = Array.from(new Set(compStr.split(",").map(c => c.trim().toUpperCase()).filter(c => c !== "")));
             const novaEmpresa = {
-                nome: document.getElementById("emp-nome").value.trim(),
-                email: emailInput,
-                cnpj: cnpjInput,
+                nome: nomeInput, email: emailInput, cnpj: cnpjInput,
                 pais: document.getElementById("emp-pais").value.trim(),
                 estado: document.getElementById("emp-estado").value.trim(),
-                cep: document.getElementById("emp-cep").value.trim(),
+                cep: cepInput,
                 descricao: document.getElementById("emp-descricao").value.trim(),
                 competencias: competenciasArray
             };
