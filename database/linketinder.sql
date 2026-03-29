@@ -1,4 +1,3 @@
-
 -- 1. CRIAÇÃO DAS TABELAS PRINCIPAIS
 CREATE TABLE candidatos (
     id SERIAL PRIMARY KEY,
@@ -65,7 +64,6 @@ CREATE TABLE curtidas_empresas (
 
 
 -- 3. INSERÇÃO DE DADOS
-
 INSERT INTO competencias (nome) VALUES
     ('Python'), ('Java'), ('Groovy'), ('Angular'), ('Spring Framework');
 
@@ -110,10 +108,32 @@ INSERT INTO vagas_competencias (vaga_id, competencia_id) VALUES
     (5, 2), (5, 4); -- Vaga Fullstack precisa de Java e Angular
 
 
+-- 4. LÓGICA DE MATCH
+CREATE TABLE matches (
+    id SERIAL PRIMARY KEY,
+    candidato_id INT REFERENCES candidatos(id) ON DELETE CASCADE,
+    empresa_id INT REFERENCES empresas(id) ON DELETE CASCADE,
+    vaga_id INT REFERENCES vagas(id) ON DELETE CASCADE,
+    data_match TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (candidato_id, vaga_id)
+);
+
+
+INSERT INTO empresas (nome, cnpj, email_corporativo, descricao, pais, cep, senha) VALUES
+    ('TrollSoft', '99.999.999/0001-99', 'tech@trollsoft.com', 'Inovação e sistemas', 'Brasil', '99999-999', 'senha12345');
+
+
+INSERT INTO vagas (empresa_id, nome, descricao, local) VALUES
+    (6, 'Engenheiro de Software Sênior', 'Vaga que exige muitas competências', 'Remoto');
+
+
 INSERT INTO curtidas_candidatos (candidato_id, vaga_id) VALUES
-    (1, 1), -- O Sandubinha curtiu a vaga de Backend da Pastelsoft
-    (2, 2); -- A Maria curtiu a vaga de Frontend da Pastelsoft
+    (1, 6); -- O Sandubinha curtiu a vaga de Backend da TrollSoft
+
 
 INSERT INTO curtidas_empresas (empresa_id, candidato_id) VALUES
-    (1, 1), -- A Pastelsoft curtiu o Sandubinha (MATCH)
-    (2, 3); -- A TechBurger curtiu o João
+    (6, 1); -- A TrollSoft curtiu o Sandubinha (MATCH)
+
+
+INSERT INTO matches (candidato_id, empresa_id, vaga_id) VALUES
+    (1, 6, 6);
