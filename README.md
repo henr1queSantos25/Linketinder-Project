@@ -30,12 +30,19 @@ Abaixo está a representação visual da modelagem do banco de dados desenvolvid
 
 ![Diagrama ER](database/diagrama.png)
 
-## Funcionalidades
-- **Gestão de Perfis e Vagas**: Registo de novos candidatos, empresas e vagas através de formulários interativos.
-- **Validação de Dados Avançada (Regex)**: O sistema impede o registo de dados inválidos (E-mails, formatação de CPF/CNPJ/CEP, telefones, links e padronização de competências).
-- **Listagens Dinâmicas e Anonimato**: Na visão da empresa, os nomes dos candidatos são ocultados (ex: "Candidato Anónimo 1"), focando no recrutamento às cegas. O mesmo se aplica às vagas.
-- **Sistema de Match Lógico**: Cruzamento de dados relacionais (SQL) onde um "Match" apenas ocorre quando uma Empresa e um Candidato demonstram interesse mútuo.
-- **Análise de Dados**: Geração de um gráfico de barras dinâmico na visão da empresa.
+## A Lógica de Match 
+A aplicação Linketinder evoluiu a sua arquitetura de banco de dados para suportar a lógica de *Match* de forma mais eficiente e persistente.
+
+**Como funciona:**
+1. **Rastreio de Interesse:** As ações dos utilizadores são guardadas em tabelas distintas. Quando um candidato demonstra interesse, isso é registado na tabela `curtidas_candidatos` (relacionando o Candidato à Vaga). Quando uma empresa demonstra interesse, isso é registado na tabela `curtidas_empresas` (relacionando a Empresa ao Candidato).
+2. **Gatilho de Match:** O sistema (backend) realiza um rastreio: sempre que ocorre uma nova curtida, ele verifica se existe a contraparte correspondente (ou seja, se o interesse é mútuo).
+3. **Persistência do Evento:** Em vez de depender de consultas pesadas (`JOINs` complexos) para descobrir os matches a todo o momento, o banco de dados foi refatorado para incluir a tabela `matches`. Assim que a reciprocidade é confirmada, o sistema insere um registo físico nesta nova tabela.
+4. **Vantagem:** Esta abordagem consolida o evento, regista a data e hora exatas (`data_match`) e serve como ponto de partida otimizado para a libertação de chats e notificações entre a empresa e o candidato.
+
+## Funcionalidades Principais
+- **Gestão de Perfis e Vagas:** Registo com validação rigorosa (Regex).
+- **Recrutamento às Cegas:** Anonimato garantido antes do evento de match.
+- **Match Consolidado:** Persistência física de cruzamento de interesses mútuos em banco de dados relacional (PostgreSQL).
 
 ## Como Executar o Projeto
 
