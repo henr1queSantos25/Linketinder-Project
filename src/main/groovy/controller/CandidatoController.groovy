@@ -1,18 +1,24 @@
 package controller
 
+import dao.CandidatoDAO
 import model.Candidato
-import repository.Memoria
 
 class CandidatoController {
+    private CandidatoDAO dao = new CandidatoDAO()
 
+    boolean salvar(Candidato c) {
+        return dao.salvar(c)
+    }
 
-    boolean salvar(Candidato candidato) {
-        boolean jaExiste = Memoria.candidatos.any {it.cpf == candidato.cpf}
+    List<Candidato> listar() {
+        return dao.listarTodos()
+    }
 
-        if (!jaExiste) {
-            Memoria.candidatos.add(candidato)
-            return true
-        }
-        return false
+    boolean atualizar(Candidato c) {
+        return dao.atualizar(c)
+    }
+
+    boolean deletar(int id) {
+        return dao.deletar(id)
     }
 }

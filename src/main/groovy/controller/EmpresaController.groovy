@@ -1,17 +1,24 @@
 package controller
 
+import dao.EmpresaDAO
 import model.Empresa
-import repository.Memoria
 
 class EmpresaController {
+    private EmpresaDAO dao = new EmpresaDAO()
 
-    boolean salvar(Empresa empresa) {
-        boolean jaExiste = Memoria.empresas.any { it.cnpj == empresa.cnpj }
+    boolean salvar(Empresa e) {
+        return dao.salvar(e)
+    }
 
-        if (!jaExiste) {
-            Memoria.empresas.add(empresa)
-            return true
-        }
-        return false
+    List<Empresa> listar() {
+        return dao.listarTodas()
+    }
+
+    boolean atualizar(Empresa e) {
+        return dao.atualizar(e)
+    }
+
+    boolean deletar(int id) {
+        return dao.deletar(id)
     }
 }

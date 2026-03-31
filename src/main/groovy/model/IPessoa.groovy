@@ -1,10 +1,10 @@
 package model
 
 interface IPessoa {
+    Integer getId()
     String getNome()
-    String getEmail()
-    String getEstado()
+    String getPais()
     String getCep()
     String getDescricao()
-    List<String> getCompetencias()
+    String getSenha()
 }

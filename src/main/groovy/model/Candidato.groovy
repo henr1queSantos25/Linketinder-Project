@@ -1,6 +1,11 @@
 package model
 
+import java.time.LocalDate
+
 class Candidato extends Pessoa {
+    String sobrenome
+    LocalDate dataNascimento
+    String email
     String cpf
-    Integer idade
+    List<Competencia> competencias = []
 }

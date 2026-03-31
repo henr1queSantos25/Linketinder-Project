@@ -1,10 +1,10 @@
 package model
 
 abstract class Pessoa implements IPessoa {
+    Integer id
     String nome
-    String email
-    String estado
+    String pais
     String cep
     String descricao
-    List<String> competencias = []
+    String senha
 }
