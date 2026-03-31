@@ -1,4 +1,4 @@
-# Linketinder 
+# Linketinder
 
 ## Sobre o Projeto
 O Linketinder é um Produto Mínimo Viável (MVP) de um sistema de recrutamento estratégico. Inspirado na dinâmica de conexões de aplicações de relacionamento e no detalhamento de perfil de redes profissionais, o sistema tem como objetivo principal facilitar o encontro entre empresas e candidatos com base no alinhamento de competências.
@@ -14,10 +14,12 @@ A persistência de dados foi modelada utilizando um Banco de Dados Relacional pa
 - **Estrutura**: Composta por 8 tabelas, incluindo entidades principais (`candidatos`, `empresas`, `vagas`, `competencias`) e tabelas associativas para gerir relacionamentos N:N e o sistema de "Curtidas/Match".
 
 ### 2. Backend (Groovy)
-Desenvolvido aplicando conceitos sólidos de Programação Orientada a Objetos (POO), TDD (Test-Driven Development) e inspirado no padrão MVC.
+Desenvolvido aplicando conceitos sólidos de Programação Orientada a Objetos (POO) e estruturado rigorosamente no padrão arquitetural MVC (Model-View-Controller).
 - **Groovy**: Linguagem principal.
-- **Gradle**: Ferramenta de automação de builds e gestão de dependências.
+- **JDBC (Java Database Connectivity)**: Utilizado para a integração direta e segura com o banco de dados PostgreSQL.
 - **Spock Framework**: Utilizado para testes unitários e validação de regras de negócio.
+- **Padrão DAO (Data Access Object)**: Camada de abstração implementada para isolar a persistência de dados e as *queries* SQL das regras de negócio.
+- **Gradle**: Ferramenta de automação de builds e gestão de dependências.
 
 ### 3. Frontend (TypeScript)
 Desenvolvido como uma Single Page Application (SPA) estruturada para garantir tipagem forte e validação rigorosa no lado do cliente.
@@ -30,7 +32,7 @@ Abaixo está a representação visual da modelagem do banco de dados desenvolvid
 
 ![Diagrama ER](database/diagrama.png)
 
-## A Lógica de Match 
+## A Lógica de Match
 A aplicação Linketinder evoluiu a sua arquitetura de banco de dados para suportar a lógica de *Match* de forma mais eficiente e persistente.
 
 **Como funciona:**
@@ -40,9 +42,12 @@ A aplicação Linketinder evoluiu a sua arquitetura de banco de dados para supor
 4. **Vantagem:** Esta abordagem consolida o evento, regista a data e hora exatas (`data_match`) e serve como ponto de partida otimizado para a libertação de chats e notificações entre a empresa e o candidato.
 
 ## Funcionalidades Principais
-- **Gestão de Perfis e Vagas:** Registo com validação rigorosa (Regex).
+- **Integração Completa com Banco de Dados:** Os dados deixaram de ser voláteis (em memória) e agora são persistidos e geridos de forma segura via JDBC.
+- **CRUD Completo e Funcional:** O sistema permite Criar, Ler, Atualizar e Deletar (CRUD) registos de Candidatos, Empresas e Vagas diretamente no PostgreSQL através do padrão DAO.
+- **Gestão Inteligente de Relacionamentos (N:N):** O sistema lida automaticamente com a inserção e associação de competências (tags) tanto para perfis de candidatos quanto para vagas.
+- **Interface de Linha de Comando (CLI) Modularizada:** Menu interativo estruturado em submódulos com validação robusta de inputs (datas, inteiros) e tratamento de exceções.
 - **Recrutamento às Cegas:** Anonimato garantido antes do evento de match.
-- **Match Consolidado:** Persistência física de cruzamento de interesses mútuos em banco de dados relacional (PostgreSQL).
+- **Match Consolidado:** Persistência física de cruzamento de interesses mútuos em banco de dados relacional.
 
 ## Como Executar o Projeto
 
@@ -54,6 +59,7 @@ A aplicação Linketinder evoluiu a sua arquitetura de banco de dados para supor
 ### Execução do Backend
 1. Abra o diretório raiz do projeto na sua IDE e aguarde a sincronização do Gradle.
 2. Navegue até `src/main/groovy/Main.groovy` e execute a aplicação.
+3. Interaja com o menu CLI para testar as operações de CRUD diretamente no banco de dados.
 
 ### Execução do Frontend
 1. Abra um terminal e navegue para dentro da pasta `frontend`.
