@@ -48,6 +48,7 @@ A aplicação Linketinder evoluiu a sua arquitetura de banco de dados para supor
 - **Interface de Linha de Comando (CLI) Modularizada:** Menu interativo estruturado em submódulos com validação robusta de inputs (datas, inteiros) e tratamento de exceções.
 - **Recrutamento às Cegas:** Anonimato garantido antes do evento de match.
 - **Match Consolidado:** Persistência física de cruzamento de interesses mútuos em banco de dados relacional.
+- **Sistema de Curtidas e Match (MVP):** Lógica relacional robusta implementada. Quando uma Empresa curte um Candidato (e vice-versa), o backend faz uma verificação cruzada (`JOIN`) imediata. Se houver reciprocidade, o evento de Match é consolidado fisicamente no banco de dados, disparando alertas na interface CLI, tudo protegido contra duplicidades por restrições `ON CONFLICT` do PostgreSQL.
 
 ## Como Executar o Projeto
 

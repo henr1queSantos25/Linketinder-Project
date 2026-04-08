@@ -2,6 +2,7 @@ package view
 
 import controller.CandidatoController
 import controller.EmpresaController
+import controller.InteracaoController
 import controller.VagaController
 import model.Candidato
 import model.Competencia
@@ -16,6 +17,7 @@ class Menu {
     private CandidatoController candidatoController = new CandidatoController()
     private EmpresaController empresaController = new EmpresaController()
     private VagaController vagaController = new VagaController()
+    private InteracaoController interacaoController = new InteracaoController()
 
     void iniciar() {
         int opcao = -1
@@ -50,6 +52,7 @@ class Menu {
             println("2. Cadastrar Candidato")
             println("3. Atualizar Candidato")
             println("4. Deletar Candidato")
+            println("5. Explorar Vagas")
             println("0. Voltar")
 
             opcao = lerInteiro("Escolha: ")
@@ -58,6 +61,7 @@ class Menu {
                 case 2: cadastrarCandidato(); break
                 case 3: atualizarCandidato(); break
                 case 4: deletarCandidato(); break
+                case 5: acaoCurtirVaga(); break
                 case 0: break
                 default: println("[AVISO] Opção inválida.")
             }
@@ -72,6 +76,7 @@ class Menu {
             println("2. Cadastrar Empresa")
             println("3. Atualizar Empresa")
             println("4. Deletar Empresa")
+            println("5. Buscar Candidatos")
             println("0. Voltar")
 
             opcao = lerInteiro("Escolha: ")
@@ -80,6 +85,7 @@ class Menu {
                 case 2: cadastrarEmpresa(); break
                 case 3: atualizarEmpresa(); break
                 case 4: deletarEmpresa(); break
+                case 5: acaoCurtirCandidato(); break
                 case 0: break
                 default: println("[AVISO] Opção inválida.")
             }
@@ -105,6 +111,68 @@ class Menu {
                 case 0: break
                 default: println("[AVISO] Opção inválida.")
             }
+        }
+    }
+
+    // =========================================================
+    // CURTIDAS E MATCH
+    // =========================================================
+    private void acaoCurtirVaga() {
+        println("\n--- MURAL DE VAGAS ---")
+        listarVagas()
+
+        println("\nPara curtir uma vaga, precisamos de o identificar.")
+        int candidatoId = lerInteiro("Digite o seu ID de Candidato (0 para cancelar): ")
+        if (candidatoId == 0) return
+
+        int vagaId = lerInteiro("Digite o ID da Vaga que deseja curtir: ")
+
+        boolean matchEncontrado = interacaoController.curtirVaga(candidatoId, vagaId)
+
+        println("\n[SUCESSO] Você curtiu a Vaga ID ${vagaId}!")
+
+        if (matchEncontrado) {
+            println("=====================================================")
+            println("           PARABÉNS! TEMOS UM MATCH!   ")
+            println(" A empresa dona desta vaga também já tinha curtido")
+            println(" o seu perfil. Vocês já podem conversar!")
+            println("=====================================================")
+        }
+    }
+
+    private void acaoCurtirCandidato() {
+        println("\n--- BANCO DE TALENTOS (RECRUTAMENTO ÀS CEGAS) ---")
+        List<Candidato> lista = candidatoController.listar()
+        if (lista.isEmpty()) {
+            println("Nenhum candidato disponível.")
+            return
+        }
+
+        lista.each { c ->
+            println("ID do Candidato: ${c.id}")
+            println("Skills: ${c.competencias.collect { it.nome }.join(', ')}")
+            println("Descrição: ${c.descricao}")
+            println("-" * 40)
+        }
+
+        println("\nPara curtir um perfil, precisamos de identificar a sua empresa.")
+        int empresaId = lerInteiro("Digite o seu ID de Empresa (0 para cancelar): ")
+        if (empresaId == 0) {
+            return
+        }
+
+        int candidatoId = lerInteiro("Digite o ID do Candidato que deseja curtir: ")
+
+        Integer vagaMatchId = interacaoController.curtirCandidato(empresaId, candidatoId)
+
+        println("\n[SUCESSO] Você demonstrou interesse no Candidato ID ${candidatoId}!")
+
+        if (vagaMatchId != null) {
+            println("=====================================================")
+            println("           MATCH CONFIRMADO!   ")
+            println(" Este candidato já havia curtido a sua Vaga (ID: ${vagaMatchId}).")
+            println(" O perfil completo do candidato foi desbloqueado.")
+            println("=====================================================")
         }
     }
 
@@ -152,7 +220,10 @@ class Menu {
     }
 
     private void deletarCandidato() {
-        int id = lerInteiro("\nDigite o ID do candidato para deletar: ")
+        listarCandidatos()
+        int id = lerInteiro("\nDigite o ID do candidato para deletar (0 para cancelar): ")
+        if (id == 0) return
+
         if (candidatoController.deletar(id)) {
             println("[SUCESSO] Candidato deletado!")
         } else {
@@ -220,7 +291,10 @@ class Menu {
     }
 
     private void deletarEmpresa() {
-        int id = lerInteiro("\nDigite o ID da empresa para deletar: ")
+        listarEmpresas()
+        int id = lerInteiro("\nDigite o ID da empresa para deletar (0 para cancelar): ")
+        if (id == 0) return
+
         if (empresaController.deletar(id)) {
             println("[SUCESSO] Empresa deletada!")
         } else {
@@ -250,7 +324,7 @@ class Menu {
         }
 
         lista.each { v ->
-            println("ID: ${v.id} | Empresa ID: ${v.empresaId} | Título: ${v.nome} | Local: ${v.local}")
+            println("ID: ${v.id} | Título: ${v.nome} | Local: ${v.local}")
             println("Descrição: ${v.descricao}")
             println("Skills exigidas: ${v.competencias.collect { it.nome }.join(', ')}")
             println("-" * 40)
@@ -282,7 +356,10 @@ class Menu {
     }
 
     private void deletarVaga() {
-        int id = lerInteiro("\nDigite o ID da vaga para deletar: ")
+        listarVagas()
+        int id = lerInteiro("\nDigite o ID da vaga para deletar (0 para cancelar): ")
+        if (id == 0) return
+
         if (vagaController.deletar(id)) {
             println("[SUCESSO] Vaga deletada!")
         } else {
