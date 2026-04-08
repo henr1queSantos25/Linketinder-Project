@@ -125,7 +125,16 @@ class Menu {
         int candidatoId = lerInteiro("Digite o seu ID de Candidato (0 para cancelar): ")
         if (candidatoId == 0) return
 
+        if (!candidatoController.listar().any { it.id == candidatoId }) {
+            println("\n[ERRO] Candidato com ID ${candidatoId} não encontrado no sistema.")
+            return
+        }
+
         int vagaId = lerInteiro("Digite o ID da Vaga que deseja curtir: ")
+        if (!vagaController.listar().any { it.id == vagaId }) {
+            println("\n[ERRO] Vaga com ID ${vagaId} não encontrada.")
+            return
+        }
 
         boolean matchEncontrado = interacaoController.curtirVaga(candidatoId, vagaId)
 
@@ -157,11 +166,18 @@ class Menu {
 
         println("\nPara curtir um perfil, precisamos de identificar a sua empresa.")
         int empresaId = lerInteiro("Digite o seu ID de Empresa (0 para cancelar): ")
-        if (empresaId == 0) {
+        if (empresaId == 0) return
+
+        if (!empresaController.listar().any { it.id == empresaId }) {
+            println("\n[ERRO] Empresa com ID ${empresaId} não encontrada.")
             return
         }
 
         int candidatoId = lerInteiro("Digite o ID do Candidato que deseja curtir: ")
+        if (!lista.any { it.id == candidatoId }) {
+            println("\n[ERRO] Candidato com ID ${candidatoId} não encontrado.")
+            return
+        }
 
         Integer vagaMatchId = interacaoController.curtirCandidato(empresaId, candidatoId)
 
@@ -184,7 +200,7 @@ class Menu {
         println("\n--- Lista de Candidatos ---")
         List<Candidato> lista = candidatoController.listar()
         if (lista.isEmpty()) {
-            println("Nenhum candidato encontrado.");
+            println("Nenhum candidato encontrado.")
             return
         }
 
@@ -210,6 +226,11 @@ class Menu {
         int id = lerInteiro("\nDigite o ID do candidato a atualizar (0 para cancelar): ")
         if (id == 0) return
 
+        if (!candidatoController.listar().any { it.id == id }) {
+            println("\n[ERRO] Operação cancelada: ID ${id} não existe.")
+            return
+        }
+
         println("--- Preencha os novos dados ---")
         Candidato c = preencherDadosCandidato(new Candidato(id: id))
         if (candidatoController.atualizar(c)) {
@@ -224,10 +245,15 @@ class Menu {
         int id = lerInteiro("\nDigite o ID do candidato para deletar (0 para cancelar): ")
         if (id == 0) return
 
+        if (!candidatoController.listar().any { it.id == id }) {
+            println("\n[ERRO] Operação cancelada: ID ${id} não existe.")
+            return
+        }
+
         if (candidatoController.deletar(id)) {
             println("[SUCESSO] Candidato deletado!")
         } else {
-            println("[ERRO] Falha ao deletar (ID não encontrado).")
+            println("[ERRO] Falha ao deletar.")
         }
     }
 
@@ -281,6 +307,11 @@ class Menu {
         int id = lerInteiro("\nDigite o ID da empresa a atualizar (0 para cancelar): ")
         if (id == 0) return
 
+        if (!empresaController.listar().any { it.id == id }) {
+            println("\n[ERRO] Operação cancelada: ID ${id} não existe.")
+            return
+        }
+
         println("--- Preencha os novos dados ---")
         Empresa e = preencherDadosEmpresa(new Empresa(id: id))
         if (empresaController.atualizar(e)) {
@@ -295,10 +326,15 @@ class Menu {
         int id = lerInteiro("\nDigite o ID da empresa para deletar (0 para cancelar): ")
         if (id == 0) return
 
+        if (!empresaController.listar().any { it.id == id }) {
+            println("\n[ERRO] Operação cancelada: ID ${id} não existe.")
+            return
+        }
+
         if (empresaController.deletar(id)) {
             println("[SUCESSO] Empresa deletada!")
         } else {
-            println("[ERRO] Falha ao deletar (ID não encontrado ou possui vagas atreladas).")
+            println("[ERRO] Falha ao deletar.")
         }
     }
 
@@ -334,10 +370,16 @@ class Menu {
     private void cadastrarVaga() {
         println("\n--- Publicar Nova Vaga ---")
         Vaga v = preencherDadosVaga(new Vaga())
+
+        if (!empresaController.listar().any { it.id == v.empresaId }) {
+            println("\n[ERRO] Operação cancelada: A Empresa com ID ${v.empresaId} não existe.")
+            return
+        }
+
         if (vagaController.salvar(v)) {
             println("[SUCESSO] Vaga salva!")
         } else {
-            println("[ERRO] Falha ao salvar (Verifique se o ID da Empresa existe).")
+            println("[ERRO] Falha ao salvar a vaga.")
         }
     }
 
@@ -346,8 +388,19 @@ class Menu {
         int id = lerInteiro("\nDigite o ID da vaga a atualizar (0 para cancelar): ")
         if (id == 0) return
 
+        if (!vagaController.listar().any { it.id == id }) {
+            println("\n[ERRO] Operação cancelada: ID ${id} não existe.")
+            return
+        }
+
         println("--- Preencha os novos dados ---")
         Vaga v = preencherDadosVaga(new Vaga(id: id))
+
+        if (!empresaController.listar().any { it.id == v.empresaId }) {
+            println("\n[ERRO] Operação cancelada: A Empresa com ID ${v.empresaId} não existe.")
+            return
+        }
+
         if (vagaController.atualizar(v)) {
             println("[SUCESSO] Vaga atualizada!")
         } else {
@@ -360,10 +413,15 @@ class Menu {
         int id = lerInteiro("\nDigite o ID da vaga para deletar (0 para cancelar): ")
         if (id == 0) return
 
+        if (!vagaController.listar().any { it.id == id }) {
+            println("\n[ERRO] Operação cancelada: ID ${id} não existe.")
+            return
+        }
+
         if (vagaController.deletar(id)) {
             println("[SUCESSO] Vaga deletada!")
         } else {
-            println("[ERRO] Falha ao deletar (ID não encontrado).")
+            println("[ERRO] Falha ao deletar.")
         }
     }
 

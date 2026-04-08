@@ -132,8 +132,8 @@ class CandidatoDAO {
             stmt.setInt(1, id)
             return stmt.executeUpdate() > 0
         } catch (Exception e) {
-            return false }
-        finally {
+            return false
+        } finally {
             conn?.close()
         }
     }
