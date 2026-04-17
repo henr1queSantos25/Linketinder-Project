@@ -1,5 +1,6 @@
 plugins {
     id 'groovy'
+    id 'application'
 }
 
 group = 'org.example'
@@ -25,4 +26,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass = 'Main'
+}
+
+run {
+    standardInput = System.in
 }
