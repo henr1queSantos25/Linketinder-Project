@@ -4,5 +4,4 @@ export interface IPessoa {
     estado: string;
     cep: string;
     descricao: string;
-    competencias: string[];
 }

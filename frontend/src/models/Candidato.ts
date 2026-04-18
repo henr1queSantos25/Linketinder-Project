@@ -5,4 +5,5 @@ export interface ICandidato extends IPessoa {
     idade: number;
     telefone: string;
     linkedin: string;
+    competencias: string[];
 }
