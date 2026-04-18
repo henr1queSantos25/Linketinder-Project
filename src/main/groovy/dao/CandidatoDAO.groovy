@@ -7,8 +7,12 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class CandidatoDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(CandidatoDAO.name)
 
     boolean salvar(Candidato c) {
         Connection conn = ConexaoBanco.conectar()
@@ -45,7 +49,12 @@ class CandidatoDAO {
             conn.commit()
             return true
         } catch (Exception e) {
-            conn.rollback()
+            try {
+                conn.rollback()
+            } catch (Exception rollbackEx) {
+                LOGGER.log(Level.SEVERE, "Falha ao executar rollback ao salvar candidato.", rollbackEx)
+            }
+            LOGGER.log(Level.SEVERE, "Falha ao salvar candidato.", e)
             return false
         } finally {
             conn.setAutoCommit(true); conn.close()
@@ -69,7 +78,9 @@ class CandidatoDAO {
                 c.competencias = CompetenciaDAO.listarPorCandidato(c.id, conn)
                 lista.add(c)
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao listar candidatos.", e)
+        }
         finally {
             conn?.close()
         }
@@ -113,7 +124,12 @@ class CandidatoDAO {
             return true
 
         } catch (Exception e) {
-            conn.rollback()
+            try {
+                conn.rollback()
+            } catch (Exception rollbackEx) {
+                LOGGER.log(Level.SEVERE, "Falha ao executar rollback ao atualizar candidato.", rollbackEx)
+            }
+            LOGGER.log(Level.SEVERE, "Falha ao atualizar candidato.", e)
             return false
         } finally {
             conn.setAutoCommit(true)
@@ -129,6 +145,7 @@ class CandidatoDAO {
             stmt.setInt(1, id)
             return stmt.executeUpdate() > 0
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao deletar candidato com id ${id}.", e)
             return false
         } finally {
             conn?.close()

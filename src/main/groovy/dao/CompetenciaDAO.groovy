@@ -6,8 +6,12 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class CompetenciaDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(CompetenciaDAO.name)
 
     static Competencia obterOuCriar(String nomeCompetencia, Connection conn) {
         String nomeFormatado = nomeCompetencia.trim()
@@ -30,7 +34,9 @@ class CompetenciaDAO {
             if (rsInsert.next()) {
                 return new Competencia(id: rsInsert.getInt(1), nome: nomeFormatado)
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao obter ou criar competencia: ${nomeCompetencia}", e)
+        }
         return null
     }
 
@@ -45,7 +51,9 @@ class CompetenciaDAO {
             while(rs.next()) {
                 comps.add(new Competencia(id: rs.getInt("id"), nome: rs.getString("nome")))
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao listar competencias do candidato com id ${candidatoId}.", e)
+        }
         return comps
     }
 
@@ -59,7 +67,9 @@ class CompetenciaDAO {
             while(rs.next()) {
                 comps.add(new Competencia(id: rs.getInt("id"), nome: rs.getString("nome")))
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao listar competencias da vaga com id ${vagaId}.", e)
+        }
         return comps
     }
 
@@ -73,6 +83,7 @@ class CompetenciaDAO {
             stmt.setInt(2, comp.id)
             return stmt.executeUpdate() > 0
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao atualizar competencia com id ${comp?.id}.", e)
             return false
         } finally {
             conn?.close()
@@ -88,6 +99,7 @@ class CompetenciaDAO {
             stmt.setInt(1, id)
             return stmt.executeUpdate() > 0
         } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Falha ao deletar competencia com id ${id}.", e)
             return false
         } finally {
             conn?.close()

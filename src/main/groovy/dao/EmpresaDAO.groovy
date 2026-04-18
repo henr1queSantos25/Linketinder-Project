@@ -6,8 +6,12 @@ import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.Statement
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class EmpresaDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(EmpresaDAO.name)
 
     boolean salvar(Empresa e) {
         Connection conn = ConexaoBanco.conectar()
@@ -30,6 +34,7 @@ class EmpresaDAO {
             }
             return true
         } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Falha ao salvar empresa.", ex)
             return false
         } finally {
             conn?.close()
@@ -51,7 +56,7 @@ class EmpresaDAO {
                 ))
             }
         } catch (Exception ex) {
-            println(ex.message)
+            LOGGER.log(Level.SEVERE, "Falha ao listar empresas.", ex)
         } finally {
             conn?.close()
         }
@@ -76,6 +81,7 @@ class EmpresaDAO {
 
             return stmt.executeUpdate() > 0
         } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Falha ao atualizar empresa com id ${e?.id}.", ex)
             return false
         } finally {
             conn?.close()
@@ -90,6 +96,7 @@ class EmpresaDAO {
             stmt.setInt(1, id)
             return stmt.executeUpdate() > 0
         } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, "Falha ao deletar empresa com id ${id}.", ex)
             return false
         } finally {
             conn?.close()
