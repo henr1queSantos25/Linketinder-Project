@@ -15,11 +15,12 @@
         <p>Conectando talentos a grandes oportunidades</p>
     </header>
 
-    <nav>
-        <button onclick="navegar('tela-cadastro-candidato')">Cadastro Candidato</button>
-        <button onclick="navegar('tela-cadastro-empresa')">Cadastro Empresa</button>
-        <button onclick="navegar('tela-lista-vagas')">Vagas (Visão Candidato)</button>
-        <button onclick="navegar('tela-lista-candidatos')">Candidatos (Visão Empresa)</button>
+    <nav id="menu-principal">
+        <button data-target="tela-cadastro-candidato">Cadastro Candidato</button>
+        <button data-target="tela-cadastro-empresa">Cadastro Empresa</button>
+        <button data-target="tela-cadastro-vaga">Publicar Vaga</button>
+        <button data-target="tela-lista-vagas">Vagas (Visão Candidato)</button>
+        <button data-target="tela-lista-candidatos">Candidatos (Visão Empresa)</button>
     </nav>
 
     <main id="app">
@@ -55,8 +56,19 @@
                 <input type="text" id="emp-estado" placeholder="Estado" required>
                 <input type="text" id="emp-cep" placeholder="CEP" required>
                 <textarea id="emp-descricao" placeholder="Descrição da Empresa" required></textarea>
-                <input type="text" id="emp-competencias" placeholder="Competências desejadas (separe por vírgula)" required>
                 <button type="submit">Salvar Empresa</button>
+            </form>
+        </section>
+
+        <section id="tela-cadastro-vaga" class="hidden">
+            <h2>Publicar Nova Vaga</h2>
+            <form id="form-vaga">
+                <input type="text" id="vaga-cnpj" placeholder="CNPJ da sua Empresa" required>
+                <input type="text" id="vaga-titulo" placeholder="Título da Vaga (ex: Dev Backend)" required>
+                <input type="text" id="vaga-local" placeholder="Local (ex: Remoto, SP)" required>
+                <textarea id="vaga-descricao" placeholder="Descrição da Vaga" required></textarea>
+                <input type="text" id="vaga-competencias" placeholder="Competências exigidas (separe por vírgula)" required>
+                <button type="submit">Publicar Vaga</button>
             </form>
         </section>
 
@@ -66,7 +78,7 @@
                 <table id="tabela-vagas">
                     <thead>
                         <tr>
-                            <th>Empresa</th>
+                            <th>Vaga</th>
                             <th>Competências Desejadas</th>
                             <th>Ações</th>
                         </tr>
