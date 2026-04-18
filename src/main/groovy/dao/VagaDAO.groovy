@@ -3,6 +3,7 @@ package dao
 import model.Competencia
 import model.Vaga
 import util.ConexaoBanco
+import util.JdbcBinder
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -22,10 +23,7 @@ class VagaDAO {
             String sql = "INSERT INTO vagas (empresa_id, nome, descricao, local) VALUES (?, ?, ?, ?)"
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            stmt.setInt(1, v.empresaId)
-            stmt.setString(2, v.nome)
-            stmt.setString(3, v.descricao)
-            stmt.setString(4, v.local)
+            JdbcBinder.bind(stmt, v.empresaId, v.nome, v.descricao, v.local)
             stmt.executeUpdate()
 
             ResultSet rs = stmt.getGeneratedKeys()
@@ -36,8 +34,7 @@ class VagaDAO {
                     Competencia compSalva = CompetenciaDAO.obterOuCriar(comp.nome, conn)
                     if (compSalva != null) {
                         PreparedStatement stmtRel = conn.prepareStatement("INSERT INTO vagas_competencias (vaga_id, competencia_id) VALUES (?, ?)")
-                        stmtRel.setInt(1, v.id)
-                        stmtRel.setInt(2, compSalva.id)
+                        JdbcBinder.bind(stmtRel, v.id, compSalva.id)
                         stmtRel.executeUpdate()
                     }
                 }
@@ -87,19 +84,20 @@ class VagaDAO {
             conn.setAutoCommit(false)
             String sql = "UPDATE vagas SET empresa_id=?, nome=?, descricao=?, local=? WHERE id=?"
             PreparedStatement stmt = conn.prepareStatement(sql)
-            stmt.setInt(1, v.empresaId); stmt.setString(2, v.nome); stmt.setString(3, v.descricao)
-            stmt.setString(4, v.local); stmt.setInt(5, v.id)
+
+            JdbcBinder.bind(stmt, v.empresaId, v.nome, v.descricao, v.local, v.id)
             stmt.executeUpdate()
 
             PreparedStatement stmtDel = conn.prepareStatement("DELETE FROM vagas_competencias WHERE vaga_id = ?")
-            stmtDel.setInt(1, v.id)
+            JdbcBinder.bind(stmtDel, v.id)
             stmtDel.executeUpdate()
 
             for (Competencia comp : v.competencias) {
                 Competencia compSalva = CompetenciaDAO.obterOuCriar(comp.nome, conn)
                 if (compSalva != null) {
                     PreparedStatement stmtRel = conn.prepareStatement("INSERT INTO vagas_competencias (vaga_id, competencia_id) VALUES (?, ?)")
-                    stmtRel.setInt(1, v.id); stmtRel.setInt(2, compSalva.id); stmtRel.executeUpdate()
+                        JdbcBinder.bind(stmtRel, v.id, compSalva.id)
+                        stmtRel.executeUpdate()
                 }
             }
             conn.commit()
@@ -122,7 +120,7 @@ class VagaDAO {
         Connection conn = ConexaoBanco.conectar()
         try {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM vagas WHERE id = ?")
-            stmt.setInt(1, id)
+            JdbcBinder.bind(stmt, id)
             return stmt.executeUpdate() > 0
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Falha ao deletar vaga com id ${id}.", e)

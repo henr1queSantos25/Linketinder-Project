@@ -1,6 +1,7 @@
 package dao
 
 import util.ConexaoBanco
+import util.JdbcBinder
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -21,8 +22,7 @@ class InteracaoDAO {
         try {
             String sqlInsert = "INSERT INTO curtidas_candidatos (candidato_id, vaga_id) VALUES (?, ?) ON CONFLICT DO NOTHING"
             PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert)
-            stmtInsert.setInt(1, candidatoId)
-            stmtInsert.setInt(2, vagaId)
+            JdbcBinder.bind(stmtInsert, candidatoId, vagaId)
             stmtInsert.executeUpdate()
 
             String sqlCheck = """
@@ -33,8 +33,7 @@ class InteracaoDAO {
                 WHERE v.id = ? AND ce.candidato_id = ?
             """
             PreparedStatement stmtCheck = conn.prepareStatement(sqlCheck)
-            stmtCheck.setInt(1, vagaId)
-            stmtCheck.setInt(2, candidatoId)
+            JdbcBinder.bind(stmtCheck, vagaId, candidatoId)
             ResultSet rs = stmtCheck.executeQuery()
 
             if (rs.next()) {
@@ -60,8 +59,7 @@ class InteracaoDAO {
         try {
             String sqlInsert = "INSERT INTO curtidas_empresas (empresa_id, candidato_id) VALUES (?, ?) ON CONFLICT DO NOTHING"
             PreparedStatement stmtInsert = conn.prepareStatement(sqlInsert)
-            stmtInsert.setInt(1, empresaId)
-            stmtInsert.setInt(2, candidatoId)
+            JdbcBinder.bind(stmtInsert, empresaId, candidatoId)
             stmtInsert.executeUpdate()
 
             String sqlCheck = """
@@ -71,8 +69,7 @@ class InteracaoDAO {
                 WHERE v.empresa_id = ? AND cc.candidato_id = ?
             """
             PreparedStatement stmtCheck = conn.prepareStatement(sqlCheck)
-            stmtCheck.setInt(1, empresaId)
-            stmtCheck.setInt(2, candidatoId)
+            JdbcBinder.bind(stmtCheck, empresaId, candidatoId)
             ResultSet rs = stmtCheck.executeQuery()
 
             if (rs.next()) {
@@ -93,9 +90,7 @@ class InteracaoDAO {
         try {
             String sqlMatch = "INSERT INTO matches (candidato_id, empresa_id, vaga_id) VALUES (?, ?, ?) ON CONFLICT DO NOTHING"
             PreparedStatement stmtMatch = conn.prepareStatement(sqlMatch)
-            stmtMatch.setInt(1, candidatoId)
-            stmtMatch.setInt(2, empresaId)
-            stmtMatch.setInt(3, vagaId)
+            JdbcBinder.bind(stmtMatch, candidatoId, empresaId, vagaId)
             return stmtMatch.executeUpdate() > 0
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Falha ao consolidar match. candidatoId=${candidatoId}, empresaId=${empresaId}, vagaId=${vagaId}", e)

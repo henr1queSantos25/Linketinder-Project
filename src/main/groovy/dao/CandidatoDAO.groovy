@@ -3,6 +3,7 @@ package dao
 import model.Candidato
 import model.Competencia
 import util.ConexaoBanco
+import util.JdbcBinder
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -22,15 +23,7 @@ class CandidatoDAO {
             String sql = "INSERT INTO candidatos (nome, sobrenome, data_nascimento, email, cpf, pais, cep, descricao, senha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            stmt.setString(1, c.nome)
-            stmt.setString(2, c.sobrenome)
-            stmt.setDate(3, java.sql.Date.valueOf(c.dataNascimento))
-            stmt.setString(4, c.email)
-            stmt.setString(5, c.cpf)
-            stmt.setString(6, c.pais)
-            stmt.setString(7, c.cep)
-            stmt.setString(8, c.descricao)
-            stmt.setString(9, c.senha)
+            JdbcBinder.bind(stmt, c.nome, c.sobrenome, c.dataNascimento, c.email, c.cpf, c.pais, c.cep, c.descricao, c.senha)
             stmt.executeUpdate()
 
             ResultSet rs = stmt.getGeneratedKeys()
@@ -40,8 +33,7 @@ class CandidatoDAO {
                     Competencia compSalva = CompetenciaDAO.obterOuCriar(comp.nome, conn)
                     if (compSalva) {
                         PreparedStatement stmtRel = conn.prepareStatement("INSERT INTO candidatos_competencias (candidato_id, competencia_id) VALUES (?, ?)")
-                        stmtRel.setInt(1, c.id)
-                        stmtRel.setInt(2, compSalva.id)
+                        JdbcBinder.bind(stmtRel, c.id, compSalva.id)
                         stmtRel.executeUpdate()
                     }
                 }
@@ -95,28 +87,18 @@ class CandidatoDAO {
             String sql = "UPDATE candidatos SET nome=?, sobrenome=?, data_nascimento=?, email=?, cpf=?, pais=?, cep=?, descricao=?, senha=? WHERE id=?"
             PreparedStatement stmt = conn.prepareStatement(sql)
 
-            stmt.setString(1, c.nome)
-            stmt.setString(2, c.sobrenome)
-            stmt.setDate(3, java.sql.Date.valueOf(c.dataNascimento))
-            stmt.setString(4, c.email)
-            stmt.setString(5, c.cpf)
-            stmt.setString(6, c.pais)
-            stmt.setString(7, c.cep)
-            stmt.setString(8, c.descricao)
-            stmt.setString(9, c.senha)
-            stmt.setInt(10, c.id)
+            JdbcBinder.bind(stmt, c.nome, c.sobrenome, c.dataNascimento, c.email, c.cpf, c.pais, c.cep, c.descricao, c.senha, c.id)
             stmt.executeUpdate()
 
             PreparedStatement stmtDel = conn.prepareStatement("DELETE FROM candidatos_competencias WHERE candidato_id = ?")
-            stmtDel.setInt(1, c.id)
+            JdbcBinder.bind(stmtDel, c.id)
             stmtDel.executeUpdate()
 
             for (Competencia comp : c.competencias) {
                 Competencia compSalva = CompetenciaDAO.obterOuCriar(comp.nome, conn)
                 if (compSalva != null) {
                     PreparedStatement stmtRel = conn.prepareStatement("INSERT INTO candidatos_competencias (candidato_id, competencia_id) VALUES (?, ?)")
-                    stmtRel.setInt(1, c.id)
-                    stmtRel.setInt(2, compSalva.id)
+                    JdbcBinder.bind(stmtRel, c.id, compSalva.id)
                     stmtRel.executeUpdate()
                 }
             }
@@ -142,7 +124,7 @@ class CandidatoDAO {
         Connection conn = ConexaoBanco.conectar()
         try {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM candidatos WHERE id = ?")
-            stmt.setInt(1, id)
+            JdbcBinder.bind(stmt, id)
             return stmt.executeUpdate() > 0
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Falha ao deletar candidato com id ${id}.", e)

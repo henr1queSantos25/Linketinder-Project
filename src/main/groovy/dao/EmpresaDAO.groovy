@@ -2,6 +2,7 @@ package dao
 
 import model.Empresa
 import util.ConexaoBanco
+import util.JdbcBinder
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -19,13 +20,7 @@ class EmpresaDAO {
             String sql = "INSERT INTO empresas (nome, cnpj, email_corporativo, descricao, pais, cep, senha) VALUES (?, ?, ?, ?, ?, ?, ?)"
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            stmt.setString(1, e.nome)
-            stmt.setString(2, e.cnpj)
-            stmt.setString(3, e.emailCorporativo)
-            stmt.setString(4, e.descricao)
-            stmt.setString(5, e.pais)
-            stmt.setString(6, e.cep)
-            stmt.setString(7, e.senha)
+            JdbcBinder.bind(stmt, e.nome, e.cnpj, e.emailCorporativo, e.descricao, e.pais, e.cep, e.senha)
             stmt.executeUpdate()
 
             ResultSet rs = stmt.getGeneratedKeys()
@@ -70,14 +65,7 @@ class EmpresaDAO {
             String sql = "UPDATE empresas SET nome=?, cnpj=?, email_corporativo=?, descricao=?, pais=?, cep=?, senha=? WHERE id=?"
             PreparedStatement stmt = conn.prepareStatement(sql)
 
-            stmt.setString(1, e.nome)
-            stmt.setString(2, e.cnpj)
-            stmt.setString(3, e.emailCorporativo)
-            stmt.setString(4, e.descricao)
-            stmt.setString(5, e.pais)
-            stmt.setString(6, e.cep)
-            stmt.setString(7, e.senha)
-            stmt.setInt(8, e.id)
+            JdbcBinder.bind(stmt, e.nome, e.cnpj, e.emailCorporativo, e.descricao, e.pais, e.cep, e.senha, e.id)
 
             return stmt.executeUpdate() > 0
         } catch (Exception ex) {
@@ -93,7 +81,7 @@ class EmpresaDAO {
         Connection conn = ConexaoBanco.conectar()
         try {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM empresas WHERE id = ?")
-            stmt.setInt(1, id)
+            JdbcBinder.bind(stmt, id)
             return stmt.executeUpdate() > 0
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, "Falha ao deletar empresa com id ${id}.", ex)

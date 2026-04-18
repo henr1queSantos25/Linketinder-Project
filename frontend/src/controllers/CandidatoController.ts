@@ -57,7 +57,6 @@ export class CandidatoController {
         alert("Candidato cadastrado com sucesso!");
         form.reset();
         
-        // Avisa a aplicação que os dados mudaram (útil para atualizar o gráfico)
         document.dispatchEvent(new Event("dadosAtualizados"));
     }
 
