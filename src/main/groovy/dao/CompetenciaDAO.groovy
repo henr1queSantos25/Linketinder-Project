@@ -30,9 +30,7 @@ class CompetenciaDAO {
             if (rsInsert.next()) {
                 return new Competencia(id: rsInsert.getInt(1), nome: nomeFormatado)
             }
-        } catch (Exception e) {
-            println("[ERRO Competencia] Falha ao processar '${nomeFormatado}': ${e.message}")
-        }
+        } catch (Exception e) {}
         return null
     }
 
@@ -47,9 +45,7 @@ class CompetenciaDAO {
             while(rs.next()) {
                 comps.add(new Competencia(id: rs.getInt("id"), nome: rs.getString("nome")))
             }
-        } catch (Exception e) {
-            println("[ERRO] ${e.message}")
-        }
+        } catch (Exception e) {}
         return comps
     }
 
@@ -63,7 +59,7 @@ class CompetenciaDAO {
             while(rs.next()) {
                 comps.add(new Competencia(id: rs.getInt("id"), nome: rs.getString("nome")))
             }
-        } catch (Exception e) { println("[ERRO] ${e.message}") }
+        } catch (Exception e) {}
         return comps
     }
 

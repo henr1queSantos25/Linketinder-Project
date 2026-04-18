@@ -37,12 +37,10 @@ class InteracaoDAO {
                 int empresaId = rs.getInt("empresa_id")
                 isMatch = consolidarMatch(candidatoId, empresaId, vagaId, conn)
             }
-        } catch (Exception e) {
-            println("[ERRO] Falha ao curtir vaga: ${e.message}")
-        } finally {
+        } catch (Exception e) {}
+        finally {
             conn?.close()
         }
-
         return isMatch
     }
 
@@ -75,9 +73,8 @@ class InteracaoDAO {
                 vagaMatchId = rs.getInt("vaga_id")
                 consolidarMatch(candidatoId, empresaId, vagaMatchId, conn)
             }
-        } catch (Exception e) {
-            println("[ERRO] Falha ao curtir candidato: ${e.message}")
-        } finally {
+        } catch (Exception e) {}
+        finally {
             conn?.close()
         }
 
@@ -93,7 +90,6 @@ class InteracaoDAO {
             stmtMatch.setInt(3, vagaId)
             return stmtMatch.executeUpdate() > 0
         } catch (Exception e) {
-            println("[ERRO] Falha ao consolidar o Match: ${e.message}")
             return false
         }
     }

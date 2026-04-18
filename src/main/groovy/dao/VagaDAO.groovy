@@ -42,7 +42,6 @@ class VagaDAO {
             return true
         } catch (Exception e) {
             conn.rollback()
-            println("[ERRO] Falha ao cadastrar vaga: ${e.message}")
             return false
         } finally { conn.setAutoCommit(true); conn?.close() }
     }
@@ -63,7 +62,10 @@ class VagaDAO {
                 v.competencias = CompetenciaDAO.listarPorVaga(v.id, conn)
                 lista.add(v)
             }
-        } catch (Exception e) { println(e.message) } finally { conn?.close() }
+        } catch (Exception e) {}
+        finally {
+            conn?.close()
+        }
         return lista
     }
 
@@ -93,9 +95,10 @@ class VagaDAO {
             return true
         } catch (Exception e) {
             conn.rollback()
-            println("[ERRO CRÍTICO] Falha ao atualizar vaga: ${e.message}")
             return false
-        } finally { conn.setAutoCommit(true); conn?.close() }
+        } finally {
+            conn.setAutoCommit(true); conn?.close()
+        }
     }
 
 
@@ -105,6 +108,10 @@ class VagaDAO {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM vagas WHERE id = ?")
             stmt.setInt(1, id)
             return stmt.executeUpdate() > 0
-        } catch (Exception e) { return false } finally { conn?.close() }
+        } catch (Exception e) {
+            return false
+        } finally {
+            conn?.close()
+        }
     }
 }

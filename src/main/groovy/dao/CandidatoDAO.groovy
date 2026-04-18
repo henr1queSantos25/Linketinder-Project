@@ -46,7 +46,6 @@ class CandidatoDAO {
             return true
         } catch (Exception e) {
             conn.rollback()
-            println("[ERRO CRÍTICO] Falha ao guardar candidato: ${e.message}")
             return false
         } finally {
             conn.setAutoCommit(true); conn.close()
@@ -70,9 +69,8 @@ class CandidatoDAO {
                 c.competencias = CompetenciaDAO.listarPorCandidato(c.id, conn)
                 lista.add(c)
             }
-        } catch (Exception e) {
-            println("[ERRO] ${e.message}")
-        } finally {
+        } catch (Exception e) {}
+        finally {
             conn?.close()
         }
         return lista
@@ -116,7 +114,6 @@ class CandidatoDAO {
 
         } catch (Exception e) {
             conn.rollback()
-            println("\n[ERRO NO BANCO DE DADOS] Motivo: ${e.message}")
             return false
         } finally {
             conn.setAutoCommit(true)

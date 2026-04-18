@@ -76,8 +76,8 @@ class EmpresaDAO {
 
             return stmt.executeUpdate() > 0
         } catch (Exception ex) {
-            return false }
-        finally {
+            return false
+        } finally {
             conn?.close()
         }
     }
