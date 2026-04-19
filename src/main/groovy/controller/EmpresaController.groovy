@@ -1,17 +1,21 @@
 package controller
 
-import dao.EmpresaDAO
+import dao.ICrudDAO
 import model.Empresa
 
 class EmpresaController {
-    private EmpresaDAO dao = new EmpresaDAO()
+    private final ICrudDAO<Empresa> dao
+
+    EmpresaController(ICrudDAO<Empresa> dao) {
+        this.dao = dao
+    }
 
     boolean salvar(Empresa e) {
         return dao.salvar(e)
     }
 
     List<Empresa> listar() {
-        return dao.listarTodas()
+        return dao.listar()
     }
 
     boolean atualizar(Empresa e) {

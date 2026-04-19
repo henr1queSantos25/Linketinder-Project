@@ -1,17 +1,22 @@
 package controller
 
 import dao.CandidatoDAO
+import dao.ICrudDAO
 import model.Candidato
 
 class CandidatoController {
-    private CandidatoDAO dao = new CandidatoDAO()
+    private final ICrudDAO<Candidato> dao
+
+    CandidatoController(ICrudDAO<Candidato> dao) {
+        this.dao = dao
+    }
 
     boolean salvar(Candidato c) {
         return dao.salvar(c)
     }
 
     List<Candidato> listar() {
-        return dao.listarTodos()
+        return dao.listar()
     }
 
     boolean atualizar(Candidato c) {

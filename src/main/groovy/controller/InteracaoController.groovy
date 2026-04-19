@@ -1,9 +1,13 @@
 package controller
 
-import dao.InteracaoDAO
+import dao.IInteracaoDAO
 
 class InteracaoController {
-    private InteracaoDAO dao = new InteracaoDAO()
+    private final IInteracaoDAO dao
+
+    InteracaoController(IInteracaoDAO dao) {
+        this.dao = dao
+    }
 
     boolean curtirVaga(int candidatoId, int vagaId) {
         return dao.curtirVaga(candidatoId, vagaId)

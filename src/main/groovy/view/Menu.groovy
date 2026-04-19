@@ -4,20 +4,28 @@ import controller.CandidatoController
 import controller.EmpresaController
 import controller.InteracaoController
 import controller.VagaController
+import dao.CandidatoDAO
+import dao.EmpresaDAO
+import dao.ICrudDAO
+import dao.IInteracaoDAO
+import dao.InteracaoDAO
+import dao.VagaDAO
 
 class Menu {
     private final ConsoleInput input = new ConsoleInput()
-    private final CandidatoController candidatoController = new CandidatoController()
-    private final EmpresaController empresaController = new EmpresaController()
-    private final VagaController vagaController = new VagaController()
-    private final InteracaoController interacaoController = new InteracaoController()
+
+    private final ICrudDAO candidatoDAO = new CandidatoDAO()
+    private final ICrudDAO empresaDAO = new EmpresaDAO()
+    private final ICrudDAO vagaDAO = new VagaDAO()
+    private final IInteracaoDAO interacaoDAO = new InteracaoDAO()
+    
+    private final CandidatoController candidatoController = new CandidatoController(candidatoDAO)
+    private final EmpresaController empresaController = new EmpresaController(empresaDAO)
+    private final VagaController vagaController = new VagaController(vagaDAO)
+    private final InteracaoController interacaoController = new InteracaoController(interacaoDAO)
 
     private final InteracaoMenu interacaoMenu = new InteracaoMenu(
-            input,
-            candidatoController,
-            empresaController,
-            vagaController,
-            interacaoController
+            input, candidatoController, empresaController, vagaController, interacaoController
     )
 
     private final CandidatoMenu candidatoMenu = new CandidatoMenu(input, candidatoController, interacaoMenu)

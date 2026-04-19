@@ -1,6 +1,7 @@
 package controller
 
 import dao.CandidatoDAO
+import dao.ICrudDAO
 import model.Candidato
 import spock.lang.Specification
 import java.time.LocalDate
@@ -8,12 +9,11 @@ import java.time.LocalDate
 class CandidatoControllerTest extends Specification {
 
     CandidatoController controller
-    CandidatoDAO mockDao
+    ICrudDAO mockDao
 
     def setup() {
-        mockDao = Mock(CandidatoDAO)
-        controller = new CandidatoController()
-        controller.dao = mockDao
+        mockDao = Mock(ICrudDAO)
+        controller = new CandidatoController(mockDao)
     }
 
     def "deve retornar verdadeiro ao salvar um novo candidato com sucesso"() {

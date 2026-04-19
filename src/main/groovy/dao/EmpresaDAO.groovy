@@ -1,5 +1,6 @@
 package dao
 
+import model.Candidato
 import model.Empresa
 import util.ConexaoBanco
 import util.JdbcBinder
@@ -10,7 +11,7 @@ import java.sql.Statement
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class EmpresaDAO {
+class EmpresaDAO implements ICrudDAO<Empresa>{
 
     private static final Logger LOGGER = Logger.getLogger(EmpresaDAO.name)
 
@@ -37,7 +38,7 @@ class EmpresaDAO {
     }
 
 
-    List<Empresa> listarTodas() {
+    List<Empresa> listar() {
         List<Empresa> lista = []
         Connection conn = ConexaoBanco.conectar()
         try {

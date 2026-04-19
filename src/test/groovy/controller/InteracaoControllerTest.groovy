@@ -1,17 +1,17 @@
 package controller
 
+import dao.IInteracaoDAO
 import dao.InteracaoDAO
 import spock.lang.Specification
 
 class InteracaoControllerTest extends Specification {
 
     InteracaoController controller
-    InteracaoDAO mockDao
+    IInteracaoDAO mockDao
 
     def setup() {
-        mockDao = Mock(InteracaoDAO)
-        controller = new InteracaoController()
-        controller.dao = mockDao
+        mockDao = Mock(IInteracaoDAO)
+        controller = new InteracaoController(mockDao)
     }
 
     def "deve retornar falso se o candidato curtir uma vaga e nao houver match"() {

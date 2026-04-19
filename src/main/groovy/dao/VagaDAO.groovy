@@ -1,5 +1,6 @@
 package dao
 
+import model.Candidato
 import model.Competencia
 import model.Vaga
 import util.ConexaoBanco
@@ -11,7 +12,7 @@ import java.sql.Statement
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class VagaDAO {
+class VagaDAO implements ICrudDAO<Vaga>{
 
     private static final Logger LOGGER = Logger.getLogger(VagaDAO.name)
 
@@ -53,7 +54,7 @@ class VagaDAO {
     }
 
 
-    List<Vaga> listarTodas() {
+    List<Vaga> listar() {
         List<Vaga> lista = []
         Connection conn = ConexaoBanco.conectar()
         try {

@@ -1,5 +1,6 @@
 package controller
 
+import dao.ICrudDAO
 import dao.VagaDAO
 import model.Competencia
 import model.Vaga
@@ -8,12 +9,11 @@ import spock.lang.Specification
 class VagaControllerTest extends Specification {
 
     VagaController controller
-    VagaDAO mockDao
+    ICrudDAO mockDao
 
     def setup() {
-        mockDao = Mock(VagaDAO)
-        controller = new VagaController()
-        controller.dao = mockDao
+        mockDao = Mock(ICrudDAO)
+        controller = new VagaController(mockDao)
     }
 
     def "deve retornar verdadeiro ao salvar uma vaga com sucesso"() {
@@ -42,7 +42,7 @@ class VagaControllerTest extends Specification {
             def lista = controller.listar()
 
         then: "o DAO retorna a lista corretamente"
-            1 * mockDao.listarTodas() >> [vagaMock]
+            1 * mockDao.listar() >> [vagaMock]
             lista.size() == 1
             lista[0].nome == "Engenheiro de Dados"
     }

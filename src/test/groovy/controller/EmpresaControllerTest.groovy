@@ -1,18 +1,18 @@
 package controller
 
 import dao.EmpresaDAO
+import dao.ICrudDAO
 import model.Empresa
 import spock.lang.Specification
 
 class EmpresaControllerTest extends Specification {
 
     EmpresaController controller
-    EmpresaDAO mockDao
+    ICrudDAO mockDao
 
     def setup() {
-        mockDao = Mock(EmpresaDAO)
-        controller = new EmpresaController()
-        controller.dao = mockDao
+        mockDao = Mock(ICrudDAO)
+        controller = new EmpresaController(mockDao)
     }
 
     def "deve retornar verdadeiro ao salvar uma nova empresa com sucesso"() {

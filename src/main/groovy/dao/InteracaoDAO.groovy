@@ -1,5 +1,6 @@
 package dao
 
+import model.Candidato
 import util.ConexaoBanco
 import util.JdbcBinder
 import java.sql.Connection
@@ -8,7 +9,7 @@ import java.sql.ResultSet
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class InteracaoDAO {
+class InteracaoDAO implements IInteracaoDAO {
 
     private static final Logger LOGGER = Logger.getLogger(InteracaoDAO.name)
 

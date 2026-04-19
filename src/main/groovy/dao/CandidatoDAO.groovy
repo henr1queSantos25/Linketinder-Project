@@ -11,7 +11,7 @@ import java.sql.Statement
 import java.util.logging.Level
 import java.util.logging.Logger
 
-class CandidatoDAO {
+class CandidatoDAO implements ICrudDAO<Candidato> {
 
     private static final Logger LOGGER = Logger.getLogger(CandidatoDAO.name)
 
@@ -54,7 +54,7 @@ class CandidatoDAO {
     }
 
 
-    List<Candidato> listarTodos() {
+    List<Candidato> listar() {
         List<Candidato> lista = []
         Connection conn = ConexaoBanco.conectar()
         try {

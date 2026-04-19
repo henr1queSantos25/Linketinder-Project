@@ -1,17 +1,21 @@
 package controller
 
-import dao.VagaDAO
+import dao.ICrudDAO
 import model.Vaga
 
 class VagaController {
-    private VagaDAO dao = new VagaDAO()
+    private final ICrudDAO<Vaga> dao
+
+    VagaController(ICrudDAO<Vaga> dao) {
+        this.dao = dao
+    }
 
     boolean salvar(Vaga v) {
         return dao.salvar(v)
     }
 
     List<Vaga> listar() {
-        return dao.listarTodas()
+        return dao.listar()
     }
 
     boolean atualizar(Vaga v) {
