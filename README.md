@@ -58,7 +58,7 @@ A aplicação Linketinder evoluiu a sua arquitetura de banco de dados para supor
 3. Navegue até à pasta `database/` do projeto e execute o script `linketinder.sql` na sua ferramenta de preferência (pgAdmin, DBeaver, etc.) para criar as tabelas e popular os dados iniciais.
 
 ### Execução do Backend
-1. Abra o diretório raiz do projeto na sua IDE e aguarde a sincronização do Gradle.
+1. Abra o diretório `backend` do projeto na sua IDE e aguarde a sincronização do Gradle.
 2. Navegue até `src/main/groovy/Main.groovy` e execute a aplicação.
 3. Interaja com o menu CLI para testar as operações de CRUD diretamente no banco de dados.
 
