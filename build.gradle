@@ -22,6 +22,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     implementation 'org.postgresql:postgresql:42.7.2'
+
+    implementation 'org.apache.groovy:groovy-json:4.0.0'
 }
 
 test {
