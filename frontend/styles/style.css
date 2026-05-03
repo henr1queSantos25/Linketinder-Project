@@ -51,6 +51,11 @@ nav button:hover {
     background-color: #555;
 }
 
+nav button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 main {
     padding: 1.5rem;
     max-width: 800px;
