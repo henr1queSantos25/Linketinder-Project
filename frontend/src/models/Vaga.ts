@@ -1,6 +1,7 @@
 export interface IVaga {
-    idEmpresa: string; 
-    titulo: string;
+    id?: number;
+    empresaId: number;
+    nome: string;
     descricao: string;
     local: string;
     competencias: string[];

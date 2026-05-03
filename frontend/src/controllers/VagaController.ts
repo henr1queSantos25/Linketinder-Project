@@ -1,4 +1,4 @@
-import { Memoria } from "../state/Memoria.js";
+import { ApiService } from "../services/ApiService.js";
 import type { IVaga } from "../models/Vaga.js";
 import { Validadores } from "../utils/Validadores.js";
 
@@ -8,76 +8,73 @@ export class VagaController {
         if (form) {
             form.addEventListener("submit", this.salvar.bind(this));
         }
-
-        const tbody = document.querySelector("#tabela-vagas tbody");
-        if (tbody) {
-            tbody.addEventListener("click", this.lidarComCliqueTabela.bind(this));
-        }
     }
 
-    private static salvar(event: Event): void {
+    private static async salvar(event: Event): Promise<void> {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
         
-        const cnpjInput = (document.getElementById("vaga-cnpj") as HTMLInputElement).value.trim();
-        const tituloInput = (document.getElementById("vaga-titulo") as HTMLInputElement).value.trim();
+        const usuarioRaw = sessionStorage.getItem("usuarioLogado");
+        const usuarioLogado = usuarioRaw ? JSON.parse(usuarioRaw) as { id?: number; tipo?: string } : null;
+        const empresaIdInput = Number(usuarioLogado?.id);
+        const nomeInput = (document.getElementById("vaga-nome") as HTMLInputElement).value.trim();
         const localInput = (document.getElementById("vaga-local") as HTMLInputElement).value.trim();
         const descricaoInput = (document.getElementById("vaga-descricao") as HTMLTextAreaElement).value.trim();
         const compStr = (document.getElementById("vaga-competencias") as HTMLInputElement).value;
 
-        if (!Validadores.validarCNPJ(cnpjInput)) return alert("Erro: CNPJ inválido.");
+        if (usuarioLogado?.tipo !== "EMPRESA") return alert("Erro: Apenas empresas podem publicar vagas.");
+        if (!Number.isInteger(empresaIdInput) || empresaIdInput <= 0) return alert("Erro: ID da empresa inválido.");
         if (!Validadores.validarTags(compStr)) return alert("Erro: Competências inválidas.");
-
-        if (!Memoria.empresas.some(e => e.cnpj === cnpjInput)) {
-            return alert("Erro: Nenhuma empresa cadastrada com este CNPJ.");
-        }
 
         const competenciasArray = Array.from(new Set(
             compStr.split(",").map(c => c.trim().toUpperCase()).filter(c => c !== "")
         ));
 
         const novaVaga: IVaga = {
-            idEmpresa: cnpjInput, titulo: tituloInput, local: localInput,
+            empresaId: empresaIdInput,
+            nome: nomeInput,
+            local: localInput,
             descricao: descricaoInput, competencias: competenciasArray
         };
 
-        Memoria.vagas.push(novaVaga);
-        alert("Vaga publicada com sucesso!");
-        form.reset();
+        try {
+            await ApiService.post('/vagas', novaVaga);
+            alert("Vaga publicada com sucesso!");
+            form.reset();
+            await VagaController.renderizar();
+        } catch (error: any) {
+            alert(`Erro ao publicar vaga: ${error.message}`);
+        }
     }
 
-    static renderizar(): void {
+    static async renderizar(): Promise<void> {
         const tbody = document.querySelector("#tabela-vagas tbody");
         if (!tbody) return;
-        tbody.innerHTML = ""; 
+        tbody.innerHTML = "<tr><td colspan='4'>Carregando dados do servidor...</td></tr>";
 
-        Memoria.vagas.forEach((vaga, index) => {
-            const tr = document.createElement("tr");
-            tr.title = `Local: ${vaga.local} | Descrição: ${vaga.descricao}`;
-            tr.innerHTML = `
-                <td class="td-padrao">${vaga.titulo}</td>
-                <td class="td-padrao">${vaga.competencias.join(", ")}</td>
-                <td class="td-padrao">
-                    <button data-acao="curtir" data-index="${index}">Curtir</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
+        try {
+            const vagas = await ApiService.get('/vagas');
+            tbody.innerHTML = "";
 
-    private static lidarComCliqueTabela(event: Event): void {
-        const target = event.target as HTMLElement;
-        if (target.tagName === "BUTTON" && target.getAttribute("data-acao") === "curtir") {
-            const indexAttr = target.getAttribute("data-index");
-            const index = indexAttr !== null ? Number.parseInt(indexAttr, 10) : Number.NaN;
-            const vaga = Number.isInteger(index) ? Memoria.vagas[index] : undefined;
-
-            if (!vaga) {
-                alert("Não foi possível identificar a vaga selecionada.");
+            if (vagas.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4'>Nenhuma vaga encontrada.</td></tr>";
                 return;
             }
 
-            alert(`Você demonstrou interesse na Vaga Anônima: ${vaga.titulo}!`);
+            vagas.forEach((vaga: any) => {
+                const tr = document.createElement("tr");
+                const competencias = Array.isArray(vaga.competencias) ? vaga.competencias : [];
+                tr.title = `Local: ${vaga.local ?? ""} | Descrição: ${vaga.descricao ?? ""}`;
+                tr.innerHTML = `
+                    <td class="td-padrao">${vaga.nome ?? ""}</td>
+                    <td class="td-padrao">${vaga.local ?? ""}</td>
+                    <td class="td-padrao">${vaga.descricao ?? ""}</td>
+                    <td class="td-padrao">${competencias.join(", ")}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error: any) {
+            tbody.innerHTML = `<tr><td colspan='4' style="color: red;">Erro ao buscar dados: ${error.message}</td></tr>`;
         }
     }
 }
