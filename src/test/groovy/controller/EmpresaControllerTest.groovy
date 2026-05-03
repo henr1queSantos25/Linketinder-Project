@@ -17,7 +17,7 @@ class EmpresaControllerTest extends Specification {
 
     def "deve retornar verdadeiro ao salvar uma nova empresa com sucesso"() {
         given:
-            def empresa = new Empresa(
+            Empresa empresa = new Empresa(
                     nome: "Tech Inovações",
                     emailCorporativo: "contato@techinovacoes.com",
                     cnpj: "12.345.678/0001-90",
@@ -27,7 +27,7 @@ class EmpresaControllerTest extends Specification {
             )
 
         when: "tentar salvar a empresa"
-            def resultado = controller.salvar(empresa)
+            boolean resultado = controller.salvar(empresa)
 
         then: "o DAO deve ser chamado 1 vez e o controller deve retornar true"
             1 * mockDao.salvar(empresa) >> true
@@ -36,10 +36,10 @@ class EmpresaControllerTest extends Specification {
 
     def "deve retornar falso ao falhar na gravacao da empresa"() {
         given: "uma empresa que vai causar erro (ex: CNPJ duplicado)"
-            def empresaDuplicada = new Empresa(nome: "Global Corp Filial", cnpj: "00.000.000/0001-00")
+            Empresa empresaDuplicada = new Empresa(nome: "Global Corp Filial", cnpj: "00.000.000/0001-00")
 
         when: "tentar salvar a empresa"
-            def resultado = controller.salvar(empresaDuplicada)
+            boolean resultado = controller.salvar(empresaDuplicada)
 
         then: "o DAO deve retornar falso e o controller repassa a falha"
             1 * mockDao.salvar(empresaDuplicada) >> false

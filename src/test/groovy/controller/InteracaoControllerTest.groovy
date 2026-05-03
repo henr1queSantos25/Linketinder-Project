@@ -43,7 +43,7 @@ class InteracaoControllerTest extends Specification {
 
     def "deve retornar o id da vaga se a empresa curtir um candidato e gerar match"() {
         when: "a empresa 3 curte o candidato 2"
-            def vagaMatchId = controller.curtirCandidato(3, 2)
+            Integer vagaMatchId = controller.curtirCandidato(3, 2)
 
         then: "o DAO deteta a reciprocidade e devolve o ID da vaga (ex: 15) que o candidato havia curtido antes"
             1 * mockDao.curtirCandidato(3, 2) >> 15
