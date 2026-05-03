@@ -2,7 +2,8 @@ import { Navigation } from "./utils/Navigation.js";
 import { EmpresaController } from "./controllers/EmpresaController.js";
 import { VagaController } from "./controllers/VagaController.js";
 import { CandidatoController } from "./controllers/CandidatoController.js";
-import { Memoria } from "./state/Memoria.js";
+import { AuthController } from "./controllers/AuthController.js";
+import { ApiService } from "./services/ApiService.js";
 
 
 declare const Chart: any;
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     EmpresaController.iniciar();
     VagaController.iniciar();
     CandidatoController.iniciar();
+    AuthController.iniciar();
 
     Navigation.iniciar((idTela) => {
         if (idTela === "tela-lista-vagas") {
@@ -30,17 +32,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function renderizarGrafico(): void {
+async function renderizarGrafico(): Promise<void> {
     const canvas = document.getElementById("grafico-competencias") as HTMLCanvasElement;
     if (!canvas) return;
 
     const contagem: Record<string, number> = {};
-    Memoria.candidatos.forEach(candidato => {
-        candidato.competencias.forEach(comp => {
-            const nome = comp.trim().toUpperCase();
-            contagem[nome] = (contagem[nome] || 0) + 1;
+    try {
+        const candidatos = await ApiService.get('/candidatos');
+        candidatos.forEach((candidato: any) => {
+            const competencias = Array.isArray(candidato.competencias) ? candidato.competencias : [];
+            competencias.forEach((comp: string) => {
+                const nome = comp.trim().toUpperCase();
+                if (!nome) return;
+                contagem[nome] = (contagem[nome] || 0) + 1;
+            });
         });
-    });
+    } catch (error) {
+        console.error("Erro ao carregar grafico de competencias", error);
+    }
 
     if (chartInstancia) chartInstancia.destroy();
 
